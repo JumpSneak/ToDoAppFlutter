@@ -5,7 +5,7 @@ import 'package:todolist/main.dart';
 
 double taskcounter = 0.0;
 double donecounter = 0.0;
-double _progress = 0.0;
+double progress = 0.0;
 _ProgressState? p = null;
 List<Widget> tasklist = [Tasktodo(label: "~~~")];
 
@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
     taskbox.put('text', tasklisttexts);
 
     taskcounter = tasklist.length.toDouble() - 1.0;
-    if (taskcounter != 0) _progress = donecounter / taskcounter;
+    if (taskcounter != 0) progress = donecounter / taskcounter;
 
     return Scaffold(
       appBar: AppBar(
@@ -46,8 +46,8 @@ class _HomeState extends State<Home> {
           final value = await Navigator.pushNamed(context, "/create");
           setState(() {
             taskcounter = tasklist.length.toDouble() - 1.0;
-            if (taskcounter != 0) _progress = donecounter / taskcounter;
-            print(_progress);
+            if (taskcounter != 0) progress = donecounter / taskcounter;
+            print(progress);
             print(donecounter);
             print(taskcounter);
           });
@@ -95,7 +95,7 @@ class _ProgressState extends State<Progress> {
           Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: LinearProgressIndicator(
-              value: _progress,
+              value: progress,
               minHeight: 30,
               backgroundColor: Colors.grey[300],
             ),
@@ -168,7 +168,7 @@ class _TasktodoState extends State<Tasktodo> {
                       donecounter--;
                     }
                     if (taskcounter != 0) {
-                      _progress = donecounter / taskcounter;
+                      progress = donecounter / taskcounter;
                       p?.setState(() {});
                     }
                     //print(tasklist[0].get_label());

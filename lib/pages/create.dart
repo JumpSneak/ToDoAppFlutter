@@ -41,6 +41,7 @@ class _CreateState extends State<Create> {
                     final taskbox = Hive.box("mybox");
                     taskbox.delete('text');
                     tasklisttexts = [];
+                    donecounter = 0.0;
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(
