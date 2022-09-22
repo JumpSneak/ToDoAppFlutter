@@ -62,9 +62,7 @@ class _CreateState extends State<Create> {
                 child: TextButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print("tasktestkljsdflkj ${tasklist[0].}");
-                      tasklist.add(Tasktodo(label: textinput.text, id: tasklisttexts.length,)); ////////
-                      donelist.add(true);
+                      tasklist.add(Tasktodo(label: textinput.text)); ////////
                       final taskbox = Hive.box("mybox");
                       taskbox.put('text', tasklisttexts);
                       Navigator.pop(context);
