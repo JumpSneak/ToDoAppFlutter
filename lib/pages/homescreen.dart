@@ -7,7 +7,8 @@ double taskcounter = 0.0;
 double donecounter = 0.0;
 double _progress = 0.0;
 _ProgressState? p = null;
-List<Widget> tasklist = [Tasktodo(label: "~~~")];
+List<Widget> tasklist = [Tasktodo(label: "~~~", id: 0,)];
+List<bool> donelist = [];
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -23,10 +24,19 @@ class _HomeState extends State<Home> {
     tasklisttexts = [];
     print("templist $templist");
     print("tasklisttext $tasklisttexts");
-    tasklist = [Tasktodo(label: "~~~")];
-    for(int i = 0; i < templist.length; i++){
+    tasklist = [
+      Tasktodo(
+        label: "~~~",
+        id: 0,
+      )
+    ];
+    for (int i = 0; i < templist.length; i++) {
       print(tasklisttexts.length);
-      tasklist.add(Tasktodo(label: templist[i]));
+      tasklist.add(Tasktodo(
+        label: templist[i],
+        id: i,
+        done: donelist[i],
+      ));
     }
     final taskbox = Hive.box("mybox");
     taskbox.put('text', tasklisttexts);
@@ -37,7 +47,6 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         backgroundColor: Colors.red[500],
         elevation: 3,
-
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -128,21 +137,29 @@ class TaskList extends StatelessWidget {
 
 class Tasktodo extends StatefulWidget {
   final String label;
+  final int id;
+  final bool done;
 
-  Tasktodo({Key? key, required this.label}) : super(key: key){
-    if(this.label != "~~~") {
+  Tasktodo({Key? key, required this.label, required this.id, this.done = false})
+      : super(key: key) {
+    if (this.label != "~~~") {
       tasklisttexts.add(this.label);
     }
   }
 
-
   @override
-  State<Tasktodo> createState() => _TasktodoState();
-
+  State<Tasktodo> createState() => _TasktodoState(this.done, this.id);
 }
 
 class _TasktodoState extends State<Tasktodo> {
   bool? _value = false;
+  int _id;
+  _TasktodoState(this._value, this._id){
+    if(this._value == true){
+      _value = change_checkbox(true);
+    }
+  }
+
 
   String get_label() {
     return "label";
@@ -153,7 +170,6 @@ class _TasktodoState extends State<Tasktodo> {
     if (widget.label == "~~~") {
       return SizedBox(height: 6);
     }
-
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 4, vertical: 3),
       child: Row(
@@ -162,16 +178,9 @@ class _TasktodoState extends State<Tasktodo> {
           Checkbox(
               value: _value,
               onChanged: (new_value) => setState(() {
-                    _value = new_value;
-                    if (_value == true) {
-                      donecounter++;
-                    } else {
-                      donecounter--;
-                    }
-                    if (taskcounter != 0) {
-                      _progress = donecounter / taskcounter;
-                      p?.setState(() {});
-                    }
+                    _value = change_checkbox(new_value);
+                    //donelist[_id] = true;
+
                     //print(tasklist[0].get_label());
                   })),
           Expanded(
@@ -200,4 +209,17 @@ void increase_donecounter() {
 
 void decrease_donecounter() {
   donecounter--;
+}
+
+bool change_checkbox(new_value){
+  if (new_value == true) {
+    donecounter++;
+  } else {
+    donecounter--;
+  }
+  if (taskcounter != 0) {
+    _progress = donecounter / taskcounter;
+    p?.setState(() {});
+  }
+  return new_value;
 }
