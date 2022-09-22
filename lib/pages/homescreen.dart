@@ -31,6 +31,9 @@ class _HomeState extends State<Home> {
     final taskbox = Hive.box("mybox");
     taskbox.put('text', tasklisttexts);
 
+    taskcounter = tasklist.length.toDouble() - 1.0;
+    if (taskcounter != 0) _progress = donecounter / taskcounter;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("TODO-List"),
